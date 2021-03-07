@@ -1,0 +1,225 @@
+<!doctype html>
+<!-- Abdulnaser Sheikh - asheikh@unomaha.edu-->
+<!--- https://professional.diabetes.org/diapro/glucose_calc -->
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" href="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" />
+
+<!-- Processing Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/addons/p5.sound.min.js"></script>
+
+  <!-- In House CSS -->
+  <link rel="stylesheet" href="css.css">
+  <!-- In House Javascript -->
+  <script src="script.js"></script>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+  <title>Insulin Dosage</title>
+
+
+<!-- navbar -->
+
+<nav class="navbar navbar-expand-lg navbar-light bg-success p-5">
+  <a class="navbar-brand" href="#">
+    <img src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">  Insuline Calculator</a>
+
+<div id="navbarNav" class="collapse navbar-collapse">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+
+
+
+    </ul>
+  </div>
+</nav>
+
+
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      <script type="text/javascript">
+      var time = [null];
+      var myInsulin = [['Time of Day', 'Insulin Level (mIU/L)'],["",0]];
+
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+        let count = 0;
+        function drawChart() {
+          // var data = google.visualization.arrayToDataTable([
+          //   ['Time of Day', 'Insulin Level (mIU/L)'],
+          //   ['5:00 AM',  25],
+          //   ['6:00 AM',  104],
+          //   ['7:00 AM',  117],
+          //   ['8:00 AM',  66],
+          //   ['9:00 AM',  42]
+          // ]);
+
+          var data = google.visualization.arrayToDataTable(myInsulin);
+
+          var options = {
+            title: 'Insulin Level Throughout the Day',
+            curveType: 'function',
+            legend: { position: 'bottom' }
+          };
+
+          var chart = new google.visualization.ColumnChart(document.getElementById('curve_chart'));
+          chart.draw(data, options);
+        }
+
+        function getData() {
+          time[time.length] = parseInt(document.getElementById('input_time').value, 10);
+          if(count == 0) {
+            myInsulin[1] = [getTime(time[time.length-1]),parseFloat(document.getElementById('input_insulin').value)];
+            count++;
+          } else {
+          myInsulin[myInsulin.length] = [getTime(time[time.length-1]),parseFloat(document.getElementById('input_insulin').value)];
+        }
+          sortMyInsulin();
+          drawChart();
+        }
+        function sortMyInsulin() {
+          for(let i = 1; i < time.length - 1; i++) {
+            if(time[i] > time[i+1]) {
+              //Swap index of insulin and time
+              let tempT = time[i];
+              let tempI = myInsulin[i];
+              time[i] = time[i+1];
+              time[i+1] = tempT;
+              myInsulin[i] = myInsulin[i+1];
+              myInsulin[i+1] = tempI;
+              i = 0;
+            }
+          }
+        }
+
+        function getTime(x) {
+          if(x == 0) {
+            return "12:00 AM";
+          } else if(x < 12) {
+            return x+":00 AM"
+          } else if(x == 12) {
+            return "12:00 PM";
+          } else {
+            return (x-12) + ":00 PM";
+          }
+        }
+      </script>
+
+
+
+</head>
+<body style="background-color: #f9f9f9;">
+
+
+  <!-- The title of the page -->
+  <h1>eAG/A1C Conversion Calculator</h1>
+  <div class="input_form d-flex justify-content-center row" style="
+      margin-right: 0px;
+  ">
+
+
+  <!-- A little message informing the user about what this program dose -->
+  <div class="col-5 mx-auto container">
+    <p>
+      ADA is recommending the use of a new term in diabetes management, estimated average glucose, or eAG. Health care providers can now report A1C results to patients using the same units (mg/dl or mmol/l) that patients see routinely in blood glucose measurements. The calculator and information below describe the ADAG Study that defined the relationship between A1C and eAG and how eAG can be used to help improve the discussion of glucose control with patients.
+    </p>
+  </div>
+
+
+    <!-- The actual form -->
+    <div class="gluc-form">
+      <div class="row  container mx-auto">
+        <div class="col-5 mx-auto container FormProblem" data-original-title="" title="">
+          <label class="control-label" for="edit-calc-source">Choose source:</label>
+          <div id="edit-calc-source" class="form-radios">
+            <div class="form-item form-item-calc-source form-type-radio radio" data-original-title="" title=""> <label class="control-label" for="edit-calc-source-1"><input type="radio" id="A1C" name="calc_source" value="1" checked="checked" class="form-radio ajax-processed"> A1C to eAG</label>
+            </div>
+            <div class="form-item form-item-calc-source form-type-radio radio" data-original-title="" title=""> <label class="control-label" for="edit-calc-source-2"><input type="radio" id="eAG" name="calc_source" value="2" class="form-radio ajax-processed"> eAG to A1C</label>
+            </div>
+          </div>
+          <div class="help-block">Unit to calculate from</div>
+        </div>
+        <div class="col-5 mx-auto container FormProblem" data-original-title="" title="">
+          <label class="control-label" for="edit-calc-target">To:</label>
+          <div id="edit-calc-target" class="form-radios">
+            <div class="form-item form-item-calc-target form-type-radio radio" data-original-title="" title=""> <label class="control-label" for="edit-calc-target-1"><input type="radio" id="mg" name="calc_target" value="1" checked="checked" class="form-radio"> mg/dl</label>
+            </div>
+            <div class="form-item form-item-calc-target form-type-radio radio" data-original-title="" title=""> <label class="control-label" for="edit-calc-target-2"><input type="radio" id="mmol" name="calc_target" value="2" class="form-radio"> mmol/l</label>
+            </div>
+          </div>
+          <div class="help-block">Unit to calculate to</div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="form-item form-item-calc-value form-type-textfield form-group" data-original-title="" title=""> <label class="control-label" for="edit-calc-value"><span id="glucose_calc_wrapper">Source value</span> <span class="form-required" title="This field is required.">*</span></label>
+          <input class="form-control form-text required" type="text" id="edit-calc-value" name="calc_value" value="" size="10" maxlength="10">
+        </div>
+      </div>
+      <button type="submit" id="btn btn-success button_calculation" onclick="myFunction()" name="op" value="Calculate" class="btn btn-success mt-2">Calculate</button>
+      <div id="results_wrapper container">
+        <div class="container" data-original-title="" title=""> <label class="control-label" for="edit-results">Results</label>
+          <input readonly="readonly" class="form-control form-text" type="text" id="edit-results" name="results" value="" size="10" maxlength="10">
+        </div>
+        <div class="container">
+          <h3>Enter Time of Day and Insulin Level</h3>
+          <label for="tod">Time of Day:</label>
+        </br>
+          <select class="form-select" name="tod" id="input_time">
+            <option value="0">12:00 AM</option>
+            <option value="1">1:00 AM</option>
+            <option value="2">2:00 AM</option>
+            <option value="3">3:00 AM</option>
+            <option value="4">4:00 AM</option>
+            <option value="5">5:00 AM</option>
+            <option value="6">6:00 AM</option>
+            <option value="7">7:00 AM</option>
+            <option value="8">8:00 AM</option>
+            <option value="9">9:00 AM</option>
+            <option value="10">10:00 AM</option>
+            <option value="11">11:00 AM</option>
+            <option value="12">12:00 PM</option>
+            <option value="13">1:00 PM</option>
+            <option value="14">2:00 PM</option>
+            <option value="15">3:00 PM</option>
+            <option value="16">4:00 PM</option>
+            <option value="17">5:00 PM</option>
+            <option value="18">6:00 PM</option>
+            <option value="19">7:00 PM</option>
+            <option value="20">8:00 PM</option>
+            <option value="21">9:00 PM</option>
+            <option value="22">10:00 PM</option>
+            <option value="23">11:00 PM</option>
+          </select>
+        </br>
+          <label for="insulinLevel">Insulin Level (mIU/L):</label>
+        </br>
+          <input class="form-control form-text" type="text" name="" id="input_insulin" value=""></input>
+          <button class="btn btn-success m-3" onclick="getData()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- This is where the graph shows up -->
+  <div id="curve_chart" class="container" style="height: 500px; width:auto !important;"></div>
+
+
+
+
+  <!-- Bootstrap stuff -->
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+  <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js" integrity="sha384-KsvD1yqQ1/1+IA7gi3P0tyJcT3vR+NdBTt13hSJ2lnve8agRGXTTyNaBYmCR/Nwi" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous"></script>
+
+
+</body>
+</html>

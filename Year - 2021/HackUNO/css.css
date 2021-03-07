@@ -1,0 +1,41 @@
+h1 {
+  background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
+   -webkit-background-clip: text;
+   -webkit-text-fill-color: transparent;
+   text-align: center !important;
+   margin-top: 1% !important;
+   margin-bottom: 40px !important;
+}
+
+.input_form {
+
+  text-align: center;
+
+  margin-top: 1%;
+  text-align: center !important;
+
+}
+
+ .form-check-label
+ {
+   text-align: center !important;
+   margin-top: 3% !important;
+ }
+
+.FormProblem {
+
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
+.hacker {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+ p {
+  text-align: left !important;
+}
